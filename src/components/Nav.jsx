@@ -1,17 +1,16 @@
-import { Box, IconButton, Stack, useTheme } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { Moon, Sun } from "phosphor-react";
 import { useRecoilState } from "recoil";
 
-import { toggleTheme } from "@/store/atoms/theme";
+import { themeState } from "@/store/atoms/themeState";
 
 const Nav = () => {
-  const theme = useTheme();
-  const [toggle, setToggleTheme] = useRecoilState(toggleTheme);
+  const [theme, setTheme] = useRecoilState(themeState);
 
   return (
     <Box
       sx={{ height: "80px", maxWidth: "100svw", border: "none" }}
-      bgcolor={theme.palette.background.default}
+      bgcolor={theme === "dark" ? "#121212" : "whitesmoke"}
     >
       <Stack
         alignItems={"flex-end"}
@@ -19,12 +18,20 @@ const Nav = () => {
         sx={{ height: "100%", mr: "20px" }}
       >
         <IconButton
-          onClick={() => setToggleTheme(toggle === "dark" ? "light" : "dark")}
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
-          {toggle === "dark" ? (
-            <Sun size={36} weight="bold" />
+          {theme === "dark" ? (
+            <Sun
+              size={36}
+              color={theme === "dark" ? "whitesmoke" : "black"}
+              weight="bold"
+            />
           ) : (
-            <Moon size={36} weight="bold" color="black" />
+            <Moon
+              size={36}
+              color={theme === "dark" ? "whitesmoke" : "black"}
+              weight="bold"
+            />
           )}
         </IconButton>
       </Stack>

@@ -1,5 +1,4 @@
 import Traceroute from "nodejs-traceroute";
-import geoip from "geoip-lite";
 
 export default function handler(req, res) {
   // Input validation

@@ -33,7 +33,7 @@ export const AnimatedTextField = () => {
         setHops(response.data.data);
         setInput("");
         setLoading(false);
-        redirect.push("/hops");
+        redirect.push("/map");
       }
     } catch (error) {
       console.error("Error fetching data:", error);

@@ -49,9 +49,10 @@ export const AnimatedTextField = () => {
         });
         if (response.status === 200) {
           setHops(response.data.data);
-          setSearch({ input, show: false });
+          setSearch({ input, show: true });
           setInput("");
           setLoading(false);
+          console.log(response.data.data);
           redirect.push("/hops");
         }
       } catch (error) {

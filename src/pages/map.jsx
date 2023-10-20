@@ -10,15 +10,12 @@ import {
   PolylineF,
   InfoWindowF,
 } from "@react-google-maps/api";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { hopState } from "@/store/atoms/hopsState";
 import { themeState } from "@/store/atoms/themeState";
 import { darkStyles } from "@/styles/darkModeMap";
-import { searchState } from "@/store/atoms/searchState";
 
 export default function Map() {
-  const setSearch = useSetRecoilState(searchState);
-  setSearch((pre) => ({ input: pre.input, show: true }));
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
     googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,

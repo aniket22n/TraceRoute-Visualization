@@ -1,5 +1,4 @@
 import Traceroute from "nodejs-traceroute";
-import geoip from "geoip-lite";
 
 export default function handler(req, res) {
   const response = {
@@ -22,73 +21,84 @@ export default function handler(req, res) {
 
         // Get lon and lat for the hop's IP
         if (hop.ip !== "*") {
-          var geo = geoip.lookup(hop.ip);
+          fetch(`http://ip-api.com/json/${hop.ip}`)
+            .then((geo) => geo.json())
+            .then((geoJson) => {
+              if (geoJson.status === "success") {
+                var points = {
+                  lat: geoJson.lat,
+                  lng: geoJson.lon,
+                };
 
-          if (geo && geo.ll) {
-            var points = {
-              lat: geo.ll[0],
-              lng: geo.ll[1],
-            };
+                // Check if the points (lat, lng) already exist in locations
+                const locationExists = response.locations.some(
+                  (location) =>
+                    location.points.lat === points.lat &&
+                    location.points.lng === points.lng
+                );
 
-            // Check if the points (lat, lng) already exist in locations
-            const locationExists = response.locations.some(
-              (location) =>
-                location.points.lat === points.lat &&
-                location.points.lng === points.lng
-            );
+                // If the location doesn't exist, add it to the locations array
+                if (!locationExists) {
+                  response.locations.push({
+                    hop: [hop.hop],
+                    points: points,
+                  });
+                } else {
+                  // If the location already exists, find it and add the hop to its hop array
+                  const existingLocation = response.locations.find(
+                    (location) =>
+                      location.points.lat === points.lat &&
+                      location.points.lng === points.lng
+                  );
+                  existingLocation.hop.push(hop.hop);
+                }
+              }
+            })
+            .catch((err) => {
+              console.error("Error fetching geo data for hop:", err);
+            });
+        }
+      })
+      .on("close", (close) => {
+        fetch(`http://ip-api.com/json/${response.destination}`)
+          .then((geo) => geo.json())
+          .then((geoJson) => {
+            if (geoJson.status === "success") {
+              var points = {
+                lat: geoJson.lat,
+                lng: geoJson.lon,
+              };
 
-            // If the location doesn't exist, add it to the locations array
-            if (!locationExists) {
-              response.locations.push({
-                hop: [hop.hop],
-                points: points,
-              });
-            } else {
-              // If the location already exists, find it and add the hop to its hop array
-              const existingLocation = response.locations.find(
+              // Check if the points (lat, lng) already exist in locations
+              const locationExists = response.locations.some(
                 (location) =>
                   location.points.lat === points.lat &&
                   location.points.lng === points.lng
               );
-              existingLocation.hop.push(hop.hop);
+
+              // If the location doesn't exist, add it to the locations array
+              if (!locationExists) {
+                response.locations.push({
+                  hop: [32],
+                  points: points,
+                });
+              } else {
+                // If the location already exists, find it and add the hop to its hop array
+                const existingLocation = response.locations.find(
+                  (location) =>
+                    location.points.lat === points.lat &&
+                    location.points.lng === points.lng
+                );
+                existingLocation.hop.push(32);
+              }
             }
-          }
-        }
-      })
-      .on("close", (close) => {
-        var geo = geoip.lookup(response.destination);
-
-        if (geo && geo.ll) {
-          var points = {
-            lat: geo.ll[0],
-            lng: geo.ll[1],
-          };
-
-          // Check if the points (lat, lng) already exist in locations
-          const locationExists = response.locations.some(
-            (location) =>
-              location.points.lat === points.lat &&
-              location.points.lng === points.lng
-          );
-
-          // If the location doesn't exist, add it to the locations array
-          if (!locationExists) {
-            response.locations.push({
-              hop: [32],
-              points: points,
-            });
-          } else {
-            // If the location already exists, find it and add the hop to its hop array
-            const existingLocation = response.locations.find(
-              (location) =>
-                location.points.lat === points.lat &&
-                location.points.lng === points.lng
-            );
-            existingLocation.hop.push(32);
-          }
-        }
-
-        return res.status(200).json({ data: response });
+          })
+          .catch((err) => {
+            console.error("Error fetching geo data for destination:", err);
+          })
+          .finally(() => {
+            return res.status(200).json({ data: response });
+          });
       });
 
     tracer.trace(req.query.input);

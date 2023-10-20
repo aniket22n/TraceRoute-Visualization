@@ -1,40 +1,40 @@
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { Moon, Sun } from "phosphor-react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { themeState } from "@/store/atoms/themeState";
+import { searchState } from "@/store/atoms/searchState";
 
 const Nav = () => {
   const [theme, setTheme] = useRecoilState(themeState);
+  const search = useRecoilValue(searchState);
 
   return (
     <Box
-      sx={{ height: "80px", maxWidth: "100svw", border: "none" }}
+      sx={{
+        height: "80px",
+        maxWidth: "100svw",
+        border: "none",
+        color: theme === "dark" ? "whitesmoke" : "black",
+      }}
       bgcolor={theme === "dark" ? "#121212" : "whitesmoke"}
     >
-      <Stack
-        alignItems={"flex-end"}
-        justifyContent={"center"}
-        sx={{ height: "100%", mr: "20px" }}
-      >
+      <Stack alignItems={"center"} justifyContent={"center"} height={"100%"}>
+        <Typography variant="h1" sx={{ fontSize: "40px" }}>
+          {search}
+        </Typography>
+      </Stack>
+      <Box sx={{ position: "absolute", right: "20px", top: "15px" }}>
         <IconButton
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
           {theme === "dark" ? (
-            <Sun
-              size={36}
-              color={theme === "dark" ? "whitesmoke" : "black"}
-              weight="bold"
-            />
+            <Sun size={36} weight="bold" />
           ) : (
-            <Moon
-              size={36}
-              color={theme === "dark" ? "whitesmoke" : "black"}
-              weight="bold"
-            />
+            <Moon size={36} weight="bold" />
           )}
         </IconButton>
-      </Stack>
+      </Box>
     </Box>
   );
 };

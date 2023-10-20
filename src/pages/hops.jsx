@@ -1,21 +1,34 @@
 import Head from "next/head";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { useRouter } from "next/navigation";
 
 import { DelayedSlide } from "@/components/hops/DelayedSlide";
 import { AnimatedText } from "@/components/hops/AnimatedText";
 import { hopState } from "@/store/atoms/hopsState";
+import { MapPin } from "phosphor-react";
 
 const Hops = () => {
   const redirect = useRouter();
   const theme = useTheme();
   const hops = useRecoilValue(hopState);
+  const [map, setMap] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMap(true);
+    }, 5000);
+  }, []);
 
   return (
-    <Box sx={{ bgcolor: theme.palette.background.default }}>
+    <Box
+      sx={{
+        bgcolor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+      }}
+    >
       <Head>
         <title>Hops</title>
         <meta name="description" content="Traceroute visualizer App" />
@@ -32,8 +45,27 @@ const Hops = () => {
           textAlign: "center",
         }}
       >
-        {hops.destination === "" && <AnimatedText text={"Fetching Hops"} />}
-        {hops.destination !== "" && <AnimatedText text={hops.destination} />}
+        {!map && hops.destination === "" && (
+          <AnimatedText text={"Fetching Hops"} />
+        )}
+        {!map && hops.destination !== "" && (
+          <AnimatedText text={hops.destination} />
+        )}
+        {map && (
+          <Stack alignItems={"center"} spacing={2}>
+            <IconButton
+              onClick={() => redirect.push("/map")}
+              sx={{
+                "&:hover": {
+                  backgroundColor: theme.palette.error.dark,
+                },
+              }}
+            >
+              <MapPin size={48} />
+            </IconButton>{" "}
+            <Typography sx={{ fontSize: 30 }}>Traceroute Map</Typography>{" "}
+          </Stack>
+        )}
 
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -44,7 +76,6 @@ const Hops = () => {
             return <DelayedSlide key={index} index={index} hop={hop} />;
           })}
         </Stack>
-        <Button onClick={() => redirect.push("/map")}>Visualize map</Button>
       </Stack>
     </Box>
   );

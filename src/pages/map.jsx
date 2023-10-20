@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React, { useMemo, useState } from "react";
-import { Stack, Box, CircularProgress, Card, Typography } from "@mui/material";
+import { Stack, CircularProgress, Card, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -18,7 +18,7 @@ import { darkStyles } from "@/styles/darkModeMap";
 export default function Map() {
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyC_WoO_Ca8krEupLv5sGIlVfuTM2Y80PFA",
+    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
   });
 
   if (!isLoaded) return <CircularProgress />;
@@ -33,10 +33,8 @@ function DisplayMap({}) {
   const theme = useTheme();
   const center = useMemo(() => ({ lat: 21, lng: 79 }), []);
   const mapContainerStyle = {
-    width: "80svw",
-    height: "calc(100svh - 160px)",
-    margin: "auto",
-    marginBottom: "80px",
+    width: "100svw",
+    height: "calc(100svh - 80px)",
   };
 
   return (

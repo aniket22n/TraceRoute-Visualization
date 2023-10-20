@@ -15,6 +15,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { hopState } from "@/store/atoms/hopsState";
+import { searchState } from "@/store/atoms/searchState";
 
 export const AnimatedTextField = () => {
   const redirect = useRouter();
@@ -22,6 +23,7 @@ export const AnimatedTextField = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const setHops = useSetRecoilState(hopState);
+  const setSearch = useSetRecoilState(searchState);
 
   const handleClick = async () => {
     try {
@@ -31,9 +33,10 @@ export const AnimatedTextField = () => {
       if (response.status === 200) {
         console.log(response.data.data);
         setHops(response.data.data);
+        setSearch(input);
         setInput("");
         setLoading(false);
-        redirect.push("/map");
+        redirect.push("/hops");
       }
     } catch (error) {
       console.error("Error fetching data:", error);

@@ -96,13 +96,13 @@ function DisplayMap({}) {
                 >
                   <Typography>Hops</Typography>
                   <Stack>
-                    {selectedElement.hop.map((hop) => {
+                    {selectedElement.hop.map((hop, index) => {
                       const ip = hops.hops.find(
                         (hopInfo) => hopInfo.hop == hop
                       );
                       if (ip) {
                         return (
-                          <Stack direction={"row"} spacing={2}>
+                          <Stack key={index} direction={"row"} spacing={2}>
                             <Typography>Hop {hop}</Typography>
                             <Typography>IP {ip.ip}</Typography>
                           </Stack>
@@ -110,7 +110,9 @@ function DisplayMap({}) {
                       }
                       if (hop == 32) {
                         return (
-                          <Typography color={"red"}>Destination Hop</Typography>
+                          <Typography key={index} color={"red"}>
+                            Destination Hop
+                          </Typography>
                         );
                       }
                     })}

@@ -15,15 +15,17 @@ const Nav = () => {
         height: "80px",
         maxWidth: "100svw",
         border: "none",
-        color: theme === "dark" ? "whitesmoke" : "black",
+        color: theme === "dark" ? "#ffffff" : "#000000",
       }}
       bgcolor={theme === "dark" ? "#121212" : "whitesmoke"}
     >
-      <Stack alignItems={"center"} justifyContent={"center"} height={"100%"}>
-        <Typography variant="h1" sx={{ fontSize: "40px" }}>
-          {search}
-        </Typography>
-      </Stack>
+      {search.show && (
+        <Stack alignItems={"center"} justifyContent={"center"} height={"100%"}>
+          <Typography variant="h1" sx={{ fontSize: "40px" }}>
+            {search.input}
+          </Typography>
+        </Stack>
+      )}
       <Box sx={{ position: "absolute", right: "20px", top: "15px" }}>
         <IconButton
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

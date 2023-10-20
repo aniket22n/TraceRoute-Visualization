@@ -3,6 +3,8 @@
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Theme } from "@/theme/theme";
 import { themeState } from "@/store/atoms/themeState";
@@ -25,6 +27,7 @@ export default function Layout({ children }) {
     <>
       <ThemeProvider theme={theme}>
         <Nav />
+        <ToastContainer />
         {children}
       </ThemeProvider>
     </>

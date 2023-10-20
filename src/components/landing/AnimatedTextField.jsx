@@ -16,6 +16,15 @@ import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { hopState } from "@/store/atoms/hopsState";
 import { searchState } from "@/store/atoms/searchState";
+import { toast } from "react-toastify";
+
+function isValidDomain(domain) {
+  // Regular expression for a valid domain name
+  const domainRegex =
+    /^(?:(?:(?:xn--)?[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\.)+[a-z]{2,}|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/i;
+
+  return domainRegex.test(domain);
+}
 
 export const AnimatedTextField = () => {
   const redirect = useRouter();
@@ -26,21 +35,29 @@ export const AnimatedTextField = () => {
   const setSearch = useSetRecoilState(searchState);
 
   const handleClick = async () => {
-    try {
-      setLoading(true);
-
-      const response = await axios.get("api/traceroute", { params: { input } });
-      if (response.status === 200) {
-        console.log(response.data.data);
-        setHops(response.data.data);
-        setSearch(input);
-        setInput("");
+    if (!isValidDomain(input.trim())) {
+      toast.error(`Invalid domain :  ${input}`, {
+        position: "top-center",
+        progress: false,
+      });
+      setInput("");
+    } else {
+      try {
+        setLoading(true);
+        const response = await axios.get("api/traceroute", {
+          params: { input: input.trim() },
+        });
+        if (response.status === 200) {
+          setHops(response.data.data);
+          setSearch({ input, show: false });
+          setInput("");
+          setLoading(false);
+          redirect.push("/hops");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
         setLoading(false);
-        redirect.push("/hops");
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setLoading(false);
     }
   };
 
@@ -68,7 +85,7 @@ export const AnimatedTextField = () => {
           variant={"standard"}
           autoComplete="off"
           value={input}
-          placeholder="Domain or IPv4"
+          placeholder="Domain name"
           InputProps={{
             inputProps: {
               style: { textAlign: "center", fontSize: "24px" },

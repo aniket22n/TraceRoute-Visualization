@@ -1,22 +1,25 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
-import { useRecoilValue } from "recoil";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 
 import { DelayedSlide } from "@/components/hops/DelayedSlide";
 import { AnimatedText } from "@/components/hops/AnimatedText";
 import { hopState } from "@/store/atoms/hopsState";
 import { MapPin } from "phosphor-react";
+import { searchState } from "@/store/atoms/searchState";
 
 const Hops = () => {
   const redirect = useRouter();
   const theme = useTheme();
   const hops = useRecoilValue(hopState);
   const [map, setMap] = useState(false);
+  const setSearch = useSetRecoilState(searchState);
 
   useEffect(() => {
+    setSearch((pre) => ({ input: pre.input, show: false }));
     setTimeout(() => {
       setMap(true);
     }, 5000);

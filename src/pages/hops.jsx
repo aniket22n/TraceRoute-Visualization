@@ -2,7 +2,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useRouter } from "next/navigation";
 
 import { DelayedSlide } from "@/components/hops/DelayedSlide";
@@ -16,10 +16,8 @@ const Hops = () => {
   const theme = useTheme();
   const hops = useRecoilValue(hopState);
   const [map, setMap] = useState(false);
-  const setSearch = useSetRecoilState(searchState);
 
   useEffect(() => {
-    setSearch((pre) => ({ input: pre.input, show: false }));
     setTimeout(() => {
       setMap(true);
     }, 5000);
@@ -43,7 +41,7 @@ const Hops = () => {
         alignItems={"center"}
         spacing={6}
         sx={{
-          height: "calc(100vh - 80px)",
+          height: "calc(100svh - 80px)",
           width: "100vw",
           textAlign: "center",
         }}

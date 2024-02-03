@@ -1,5 +1,5 @@
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import { Moon, Sun } from "phosphor-react";
+import { Moon, Play, Sun } from "phosphor-react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { themeState } from "@/store/atoms/themeState";
@@ -26,6 +26,27 @@ const Nav = () => {
           </Typography>
         </Stack>
       )}
+      <Box
+        sx={{
+          position: "absolute",
+          left: "20px",
+          top: "15px",
+          fontFamily: "monospace",
+          fontSize: "20px",
+        }}
+      >
+        <Stack direction={"row"} alignItems={"center"}>
+          <a
+            href="https://github.com/aniket22n/TraceRoute-Visualization"
+            target="_blank"
+          >
+            <p>Video Demo </p>
+          </a>{" "}
+          &nbsp;
+          <Play size={24} weight="duotone" />
+        </Stack>
+      </Box>
+
       <Box sx={{ position: "absolute", right: "20px", top: "15px" }}>
         <IconButton
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

@@ -11,7 +11,7 @@ const Index = () => {
   return (
     <Box>
       <Head>
-        <title>Home</title>
+        <title>Traceroute</title>
         <meta name="description" content="Traceroute visualizer App" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
